@@ -1,0 +1,6 @@
+name = Agency Import
+description = Module to import properties for Estate Agencies
+core = 7.x
+package = Other
+dependencies[] = entity
+dependencies[] = agency

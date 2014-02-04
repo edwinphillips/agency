@@ -1,0 +1,199 @@
+<?php
+
+module_load_include('inc', 'agency_import', 'inc/classes/ftp');
+
+module_load_include('inc', 'agency_import', 'inc/classes/rightmove');
+
+module_load_include('inc', 'agency_import', 'inc/functions/general');
+
+module_load_include('inc', 'agency_import', 'inc/functions/ftp');
+
+module_load_include('inc', 'agency_import', 'inc/functions/zip');
+
+module_load_include('inc', 'agency_import', 'inc/functions/rightmove');
+
+module_load_include('inc', 'agency_import', 'inc/permissions');
+
+module_load_include('inc', 'agency_import', 'inc/controllers');
+
+module_load_include('inc', 'agency_import', 'inc/entities');
+
+module_load_include('inc', 'agency_import', 'inc/entities/delete');
+
+define('ADMIN_AGENCY_MAPPING_MANAGE_URI', 'admin/agency/mapping/manage/');
+
+define('ADMIN_AGENCY_MAPPING_URI', 'admin/agency/mapping');
+
+function agency_import_menu(){
+
+  $items['admin/agency/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage agency settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_import_settings'),
+    'file' => 'inc/forms/settings.inc',
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer agency'),
+  );
+
+  $items['admin/agency/mapping/bulk/delete/%'] = array(
+    'title' => 'Bulk Delete Mappings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_mapping_bulk_delete', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/mapping/delete.inc',
+  );  
+
+  return $items;
+	
+}
+
+function agency_import_cron(){
+
+  //Get the queues to deal with
+  $queues = agency_import_get_queues();
+
+  //Get the configuration variables
+  $config = agency_import_get_config();
+
+  //Check if the config has the variables set that are required
+  if (agency_import_check_has_required($config)){
+
+    //Iterate through each queue
+    foreach($queues as $queue){
+
+      //Switch based on the queue name
+      switch($queue['name']){
+
+        //If the queue name is ftp
+        case 'ftp':
+
+          //Set the delay for the ftp import
+          $delay = time() - variable_get('agency_import_ftp_delay',3600);
+
+          //Set the time the last import happened
+          $last = variable_get('agency_import_ftp_lastcheck',null);
+
+          break;
+
+        case 'property':
+
+          //Set the delay for the property import
+          //$delay = time() - variable_get('agency_import_property_delay',3600);
+          $delay = time() - 20;//variable_get('agency_import_property_delay',3600);
+
+          //Set the time the last import happened
+          $last = variable_get('agency_import_property_lastimport',null);
+
+          break;
+      }
+
+      //Check if the time that the import last ran is longer ago than the delay
+      if (agency_import_check_delay($last, $delay)){
+        
+          //Log that the cron task is commencing
+          watchdog('info',ucfirst($queue['name']) . ' cron task is commencing');
+
+          //Create the queue item for this cron task passing the config values
+          $queue['queue']->createItem($config);
+
+      }else{
+
+        //Log that the ftp cron task is within the delay period
+        watchdog('info', ucfirst($queue['name']) . ' cron task is skipping as within delay period');
+      
+      }      
+
+    }
+
+  }else{
+
+    //Log that a configuration value was not set correctly.
+    watchdog('info','One or more required property import configuration settings not set');          
+
+  }
+
+}
+
+function agency_import_cron_queue_info() {
+
+  //Create the queue and add the details for the send_alert_task to it
+  $queues = array();
+  $queues['agency_import_ftp'] = array(
+    'worker callback' => 'agency_import_ftp_cron_task',
+    'time' => 240
+  );
+  $queues['agency_import_property'] = array(
+    'worker callback' => 'agency_import_property_cron_task',
+    'time' => 240
+  );
+
+  return $queues;
+
+}
+
+function agency_import_property_cron_task($config){
+
+  //Is the agency uploading compressed (zip) archives?
+  if ($config['compressed'] == 'yes'){
+
+    agency_import_unzip_process($config);
+
+  }
+
+  switch($config['type']){
+
+    case 'rightmove':
+
+      agency_import_rightmove_process($config);
+
+      break;
+  }
+
+  //Set the time the property was imported
+  variable_set('agency_import_property_lastimport',time());
+
+  //Log that the cron 
+  watchdog('info','Property cron task has finished');
+
+}
+
+function agency_import_ftp_cron_task($config){
+
+  agency_import_ftp_process($config);
+
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function agency_import_entity_info() {
+
+  $info = array();
+
+  $info['agency_mapping'] = array(
+    'label' => t('Mapping'),
+    'plural label' => t('Mappings'),
+    'base table' => 'agency_mapping',
+    'entity keys' => array(
+      'id' => 'mid',
+      'label' => 'name',
+    ),
+    'uri callback' => 'entity_class_uri',
+    'entity class' => 'AgencyImportMapping',
+    'controller class' => 'AgencyImportMappingController',
+    'admin ui' => array(
+      'path' => 'admin/agency/mapping',
+      'controller class' => 'AgencyImportMappingUIController',
+      'menu wildcard' => '%agency_mapping',
+      'file' => 'inc/forms/mapping.inc',
+    ),
+    'access callback' => 'agency_import_access_callback',
+    'module' => 'agency_import',
+    'views controller class' => 'EntityDefaultViewsController',
+    'fieldable' => FALSE,
+  );
+
+  return $info;
+
+}

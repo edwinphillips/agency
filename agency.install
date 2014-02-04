@@ -1,0 +1,385 @@
+<?php 
+/**
+ * @file
+ * Installation schema for Agency module
+ *
+ * This file contains the schema for the module entities
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function agency_schema() {
+
+	$schema = array();
+
+  $schema['agency_property'] = array(
+    'description' => 'Properties',
+    'fields' => array(
+      'pid' => array(
+        'description' => 'The property ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The UID of the user that created this property',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'reference' => array(
+        'description' => 'Agency Reference for property',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),  
+      'address1' => array(
+        'description' => 'Address Line 1',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'address2' => array(
+        'description' => 'Address Line 2',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => FALSE,
+        'default' => null,
+      ),   
+      'address3' => array(
+        'description' => 'Address Line 1',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => FALSE,
+        'default' => null,
+      ),  
+      'towncity' => array(
+        'description' => 'Town / City',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => FALSE,
+        'default' => null,
+      ),               
+      'county' => array(
+        'description' => 'County',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => FALSE,
+        'default' => null,
+      ), 
+      'postcode' => array(
+        'description' => 'Postcode',
+        'type' => 'varchar',
+        'length' => 10,
+        'not null' => TRUE,
+        'default' => '',
+      ),    
+      'longitude' => array(
+        'description' => 'Longitude',
+        'type' => 'numeric',
+ 				'precision' => 10,
+ 				'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),                                                                     
+      'latitude' => array(
+        'description' => 'Latitude',
+        'type' => 'numeric',
+ 				'precision' => 10,
+ 				'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),   
+      'summary' => array(
+        'description' => 'Summary',
+        'type' => 'varchar',
+        'length' => 1000,
+        'not null' => TRUE,
+        'default' => '',
+      ), 
+      'description' => array(
+        'description' => 'Description',
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ),    
+      'bedrooms' => array(
+        'description' => 'Bedrooms',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'price' => array(
+        'description' => 'Price',
+        'type' => 'numeric',
+ 				'precision' => 11,
+ 				'scale' => 2,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      'created' => array(
+        'description' => 'Created',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'updated' => array(
+        'description' => 'Updated',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'expires' => array(
+        'description' => 'Expires',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Status',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',        
+        'not null' => TRUE,
+        'default' => 1,
+      ),                                        
+    ),
+    'indexes' => array(
+      'agency_property_pid' => array('pid'),
+      'agency_property_uid' => array('uid'),
+      'agency_property_reference' => array('reference'),
+    ),
+    'foreign keys' => array(
+      'agency_property_users_uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
+    ),        
+    'primary key' => array(
+    	'pid'
+    ),    
+  );
+
+  $schema['agency_categorisation'] = array(
+    'description' => 'Categorisation',
+    'fields' => array(
+      'cid' => array(
+        'description' => 'The Categorisation ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),   
+      'uid' => array(
+        'description' => 'The UID of the user that created this categorisation',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),              
+      'pid' => array(
+        'description' => 'The property ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),  
+      'vid' => array(
+        'description' => 'The vocabulary ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),  
+      'tid' => array(
+        'description' => 'The term ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),                	
+    ),
+    'indexes' => array(
+      'agency_categorisation_uid' => array('uid'),      
+      'agency_categorisation_pid' => array('pid'),
+      'agency_categorisation_vid' => array('vid'),
+      'agency_categorisation_tid' => array('tid'),
+    ),
+    'foreign keys' => array(
+      'agency_categorisation_agency_property_pid' => array(
+        'table' => 'agency_property',
+        'columns' => array('pid' => 'pid'),
+      ),
+      'agency_categorisation_users_uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),      
+    ),    
+    'primary key' => array(
+    	'cid',
+    ),    
+  );
+
+  $schema['agency_media'] = array(
+    'description' => 'Media',
+    'fields' => array(
+      'mid' => array(
+        'description' => 'The media ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The UID of the user that created this media',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),      
+      'pid' => array(
+        'description' => 'The property ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ), 
+      'fid' => array(
+        'description' => 'The File ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),       
+      'type' => array(
+        'description' => 'Type',
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => '',
+      ),  
+      'caption' => array(
+        'description' => 'Caption',
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => FALSE,
+        'default' => null,        
+      ),
+      'position' => array(
+        'description' => 'Position',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => TRUE,
+        'default' => 0,
+      ),      
+      'created' => array(
+        'description' => 'Created',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'updated' => array(
+        'description' => 'Updated',
+        'type' => 'int',
+        'unsigned' => TRUE,        
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'Status',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'tiny',        
+        'not null' => TRUE,
+        'default' => 1,
+      ),                 
+    ),
+    'indexes' => array(
+      'agency_media_uid' => array('uid'),      
+      'agency_media_pid' => array('pid'),
+      'agency_media_fid' => array('fid'),
+      'agency_media_type' => array('type'),
+    ),
+    'foreign keys' => array(
+      'agency_media_property_pid' => array(
+        'table' => 'agency_property',
+        'columns' => array('pid' => 'pid'),
+      ),
+      'agency_media_file_managed_fid' => array(
+        'table' => 'file_managed',
+        'columns' => array('fid' => 'fid'),
+      ),  
+      'agency_media_users_uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),          
+    ),    
+    'primary key' => array(
+    	'mid',
+    ),    
+  );
+
+  $schema['agency_feature'] = array(
+    'description' => 'Feature',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'The feature ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'pid' => array(
+        'description' => 'The property ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ), 
+      'uid' => array(
+        'description' => 'The UID of the user that created this feature',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),        
+      'description' => array(
+        'description' => 'Description',
+        'type' => 'varchar',
+        'length' => 1000,
+        'not null' => TRUE,
+        'default' => '',
+      ),   
+    ),
+    'indexes' => array(
+      'agency_feature_pid' => array('pid'),
+      'agency_feature_uid' => array('uid'),      
+    ),
+    'foreign keys' => array(
+      'agency_feature_property_pid' => array(
+        'table' => 'agency_property',
+        'columns' => array('pid' => 'pid'),
+      ),
+      'agency_feature_users_uid' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),      
+    ),    
+    'primary key' => array(
+    	'fid',
+    ),    
+  );      
+  
+	return $schema;
+
+}
+
+/**
+ * Implements hook_enable().
+ */
+//function agency_enable() {
+//
+//}
+
+/**
+ * Implements hook_uninstall().
+ */
+//function property_uninstall() {
+///
+//}

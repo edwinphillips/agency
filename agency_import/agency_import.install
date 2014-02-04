@@ -1,0 +1,64 @@
+<?php 
+/**
+ * @file
+ * Installation schema for Agency Import module
+ *
+ * This file contains the schema for the module entities
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function agency_import_schema() {
+
+	$schema = array();
+
+  $schema['agency_mapping'] = array(
+    'description' => 'Mappings',
+    'fields' => array(
+      'mid' => array(
+        'description' => 'Mapping ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),       
+      'name' => array(
+        'description' => 'The name of the import field',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),      
+      'data' => array(
+        'description' => 'The data to match against',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),   
+      'vid' => array(
+        'description' => 'Vocabulary ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),   
+      'tid' => array(
+        'description' => 'Term ID',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),   
+    ),
+    'indexes' => array(
+      'agency_mapping_name' => array('name'),
+      'agency_mapping_vid' => array('vid'),
+      'agency_mapping_tid' => array('tid'),
+    ),       
+    'primary key' => array(
+    	'mid'
+    ),     
+  );
+
+	return $schema;
+
+}

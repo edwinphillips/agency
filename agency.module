@@ -1,0 +1,247 @@
+<?php
+
+//Load various code
+module_load_include('inc', 'agency', 'inc/controllers');
+
+module_load_include('inc', 'agency', 'inc/entities');
+
+module_load_include('inc', 'agency', 'inc/permissions');
+
+module_load_include('inc', 'agency', 'inc/functions');
+
+module_load_include('inc', 'agency', 'inc/tables');
+
+module_load_include('inc', 'agency', 'inc/selects');
+
+module_load_include('inc', 'agency', 'inc/entities/create');
+
+module_load_include('inc', 'agency', 'inc/entities/delete');
+
+module_load_include('inc', 'agency', 'inc/entities/load');
+
+module_load_include('inc', 'agency', 'inc/entities/delete');
+
+module_load_include('inc', 'agency', 'inc/ajax/callbacks');
+
+//Declare the removed file status temporary value
+define('FILE_STATUS_TEMPORARY', 0);
+
+// 50 items per page.
+define('TOTAL_ITEMS_PER_PAGE', 50);
+
+// Admin uri links.
+define('ADMIN_AGENCY_PROPERTY_MANAGE_URI', 'admin/agency/property/manage/');
+define('ADMIN_AGENCY_PROPERTY_URI', 'admin/agency/property');
+define('ADMIN_AGENCY_MEDIA_MANAGE_URI', 'admin/agency/media/manage/');
+define('ADMIN_AGENCY_MEDIA_URI', 'admin/agency/media');
+
+/**
+ * Implements hook_menu().
+ */
+function agency_menu() {
+
+  $items = array();
+
+  $items['admin/agency'] = array(
+    'title' => 'Agency',
+    'description' => 'Administer Agency',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer agency'),
+    'file path' => drupal_get_path('module', 'system'),
+    'file' => 'system.admin.inc',
+    'weight' => 4,
+  );
+
+  $items['admin/agency/property/%agency_property'] = array(
+    'title' => 'Property',
+    'page callback' => 'agency_property_view_entity',
+    'page arguments' => array(3),
+    'access arguments' => array('administer agency'),
+  );  
+
+  $items['admin/agency/media/%agency_media'] = array(
+    'title' => 'Media',
+    'page callback' => 'agency_media_view_entity',
+    'page arguments' => array(3),
+    'access arguments' => array('administer agency'),
+  ); 
+
+  $items['admin/agency/property/bulk/delete/%'] = array(
+    'title' => 'Bulk Delete Properties',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_property_bulk_delete', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/property/delete.inc',
+  );
+
+  $items['admin/agency/property/bulk/hide/%'] = array(
+    'title' => 'Bulk Hide Properties',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_property_bulk_hide', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/property/hide.inc',
+  );
+
+  $items['admin/agency/property/bulk/show/%'] = array(
+    'title' => 'Bulk Show Properties',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_property_bulk_show', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/property/show.inc',
+  );  
+
+  $items['admin/agency/media/bulk/delete/%'] = array(
+    'title' => 'Bulk Delete Media',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_media_bulk_delete', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/media/delete.inc',
+  );
+
+  $items['admin/agency/media/bulk/hide/%'] = array(
+    'title' => 'Bulk Hide Media',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_media_bulk_hide', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/media/hide.inc',
+  );
+
+  $items['admin/agency/media/bulk/show/%'] = array(
+    'title' => 'Bulk Show Media',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('agency_media_bulk_show', 5),
+    'access arguments' => array('administer agency'),
+    'file' => 'inc/forms/bulk/media/show.inc',
+  );  
+
+  $items['admin/agency/agency_property_categorisation_delete_callback/%/%/%'] = array(
+    'page callback' => 'agency_property_categorisation_delete_callback',
+    'page arguments' => array(3,4,5),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer agency'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/agency/agency_property_image_delete_callback/%/%/%'] = array(
+    'page callback' => 'agency_property_image_delete_callback',
+    'page arguments' => array(3,4,5),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer agency'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['admin/agency/agency_property_media_delete_callback/%/%/%'] = array(
+    'page callback' => 'agency_property_media_delete_callback',
+    'page arguments' => array(3,4,5),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer agency'),
+    'type' => MENU_CALLBACK,
+  ); 
+
+  $items['admin/agency/agency_property_image_position_callback/%/%/%/%'] = array(
+    'page callback' => 'agency_property_image_position_callback',
+    'page arguments' => array(3,4,5,6),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer agency'),
+    'type' => MENU_CALLBACK,
+  );   
+
+  $items['admin/agency/agency_property_media_position_callback/%/%/%/%'] = array(
+    'page callback' => 'agency_property_media_position_callback',
+    'page arguments' => array(3,4,5,6),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer agency'),
+    'type' => MENU_CALLBACK,
+  );     
+
+  return $items;
+
+}
+
+/**
+ * Implements hook_entity_info().
+ */
+function agency_entity_info() {
+
+  $info = array();
+
+  $info['agency_property'] = array(
+    'label' => t('Property'),
+    'plural label' => t('Properties'),
+    'base table' => 'agency_property',
+    'entity keys' => array(
+      'id' => 'pid',
+      'label' => 'reference',
+    ),
+    'uri callback' => 'entity_class_uri',
+    'entity class' => 'AgencyProperty',
+    'controller class' => 'AgencyPropertyController',
+    'admin ui' => array(
+      'path' => 'admin/agency/property',
+      'controller class' => 'AgencyPropertyUIController',
+      'menu wildcard' => '%agency_property',
+      'file' => 'inc/forms/property.inc',
+    ),
+    'access callback' => 'agency_access_callback',
+    'module' => 'agency',
+    'views controller class' => 'EntityDefaultViewsController',
+    'fieldable' => TRUE,
+  );
+
+  $info['agency_media'] = array(
+    'label' => t('Media'),
+    'plural label' => t('Media'),    
+    'base table' => 'agency_media',
+    'entity keys' => array(
+      'id' => 'mid',
+      'label' => 'mid',
+    ),
+    'uri callback' => 'entity_class_uri',
+    'entity class' => 'AgencyMedia',
+    'controller class' => 'AgencyMediaController',
+    'admin ui' => array(
+      'path' => 'admin/agency/media',
+      'controller class' => 'AgencyMediaUIController',
+      'menu wildcard' => '%agency_media',
+      'file' => 'inc/forms/media.inc',
+    ),
+    'access callback' => 'agency_access_callback',
+    'module' => 'agency',
+    'views controller class' => 'EntityDefaultViewsController',
+    'fieldable' => TRUE,
+  );
+
+  $info['agency_feature'] = array(
+    'label' => t('Feature'),
+    'plural label' => t('Features'),    
+    'base table' => 'agency_feature',
+    'entity keys' => array(
+      'id' => 'fid',
+      'label' => 'fid',
+    ),
+    'uri callback' => 'entity_class_uri',
+    'entity class' => 'AgencyFeature',
+    'controller class' => 'AgencyFeatureController',
+    'access callback' => 'agency_access_callback',
+    'module' => 'agency',
+    'views controller class' => 'EntityDefaultViewsController',
+  );
+
+  $info['agency_categorisation'] = array(
+    'label' => t('Categorisation'),
+    'plural label' => t('Categorisations'),    
+    'base table' => 'agency_categorisation',
+    'entity keys' => array(
+      'id' => 'cid',
+      'label' => 'pid',
+    ),
+    'uri callback' => 'entity_class_uri',
+    'entity class' => 'AgencyCategorisation',
+    'controller class' => 'AgencyCategorisationController',
+    'access callback' => 'agency_access_callback',
+    'module' => 'agency',
+    'views controller class' => 'EntityDefaultViewsController',
+  );  
+
+  return $info;
+}
