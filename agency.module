@@ -245,3 +245,422 @@ function agency_entity_info() {
 
   return $info;
 }
+
+function agency_entity_property_info() {
+
+  $info = array();
+   
+  $info['agency_property']['properties']['pid'] = array(
+    'label' => t('Property ID'),
+    'description' => t('The unique id of the property'),
+    'type' => 'integer',
+    'schema field' => 'pid',
+  );
+
+  $info['agency_property']['properties']['uid'] = array(
+    'label' => t('User ID'),
+    'description' => t('The user that created this property'),
+    'type' => 'user',
+    'schema field' => 'uid',
+  ); 
+
+  $info['agency_property']['properties']['reference'] = array(
+    'label' => t('Reference'),
+    'description' => t('The in-agency reference for the property'),
+    'type' => 'text',
+    'schema field' => 'reference',
+  );
+
+  $info['agency_property']['properties']['address1'] = array(
+    'label' => t('Address1'),
+    'description' => t('The first line of address for property'),
+    'type' => 'text',
+    'schema field' => 'address1',
+  );      
+
+  $info['agency_property']['properties']['address2'] = array(
+    'label' => t('Address2'),
+    'description' => t('The second line of address for property'),
+    'type' => 'text',
+    'schema field' => 'address2',
+  );  
+
+  $info['agency_property']['properties']['address3'] = array(
+    'label' => t('Address3'),
+    'description' => t('The third line of address for property'),
+    'type' => 'text',
+    'schema field' => 'address3',
+  );  
+
+  $info['agency_property']['properties']['towncity'] = array(
+    'label' => t('Town / City'),
+    'description' => t('The town / city of the property'),
+    'type' => 'text',
+    'schema field' => 'towncity',
+  );
+
+  $info['agency_property']['properties']['county'] = array(
+    'label' => t('County'),
+    'description' => t('The county of the property'),
+    'type' => 'text',
+    'schema field' => 'county',
+  );
+
+  $info['agency_property']['properties']['postcode'] = array(
+    'label' => t('Postcode'),
+    'description' => t('The postcode of the property'),
+    'type' => 'text',
+    'schema field' => 'postcode',
+  );
+
+  $info['agency_property']['properties']['longitude'] = array(
+    'label' => t('Longitude'),
+    'description' => t('The longitude of the property'),
+    'type' => 'decimal',
+    'schema field' => 'longitude',
+  );
+
+  $info['agency_property']['properties']['latitude'] = array(
+    'label' => t('Latitude'),
+    'description' => t('The latitude of the property'),
+    'type' => 'decimal',
+    'schema field' => 'latitude',
+  );
+
+  $info['agency_property']['properties']['summary'] = array(
+    'label' => t('Summary'),
+    'description' => t('The summary of the property description'),
+    'type' => 'text',
+    'schema field' => 'summary',
+  );
+
+  $info['agency_property']['properties']['description'] = array(
+    'label' => t('Description'),
+    'description' => t('The description of the property'),
+    'type' => 'text',
+    'schema field' => 'description',
+  );
+
+  $info['agency_property']['properties']['bedrooms'] = array(
+    'label' => t('Bedrooms'),
+    'description' => t('The bedroom count for the property'),
+    'type' => 'integer',
+    'schema field' => 'bedrooms',
+  );
+
+  $info['agency_property']['properties']['price'] = array(
+    'label' => t('Price'),
+    'description' => t('The price of the property'),
+    'type' => 'decimal',
+    'schema field' => 'price',
+  );
+
+  $info['agency_property']['properties']['created'] = array(
+    'label' => t('Created'),
+    'description' => t('The date the property was created'),
+    'type' => 'date',
+    'schema field' => 'created',
+  );  
+
+  $info['agency_property']['properties']['updated'] = array(
+    'label' => t('Updated'),
+    'description' => t('The date the property was updated'),
+    'type' => 'date',
+    'schema field' => 'updated',
+  );  
+
+  $info['agency_property']['properties']['expires'] = array(
+    'label' => t('Expires'),
+    'description' => t('The date the property will expire'),
+    'type' => 'date',
+    'schema field' => 'expires',
+  );  
+
+  $info['agency_property']['properties']['status'] = array(
+    'label' => t('Status'),
+    'description' => t('The visibility of property on website'),
+    'type' => 'integer',
+    'schema field' => 'status',
+  );   
+
+  $info['agency_categorisation']['properties']['cid'] = array(
+    'label' => t('Categorisation ID'),
+    'description' => t('The unique id of the categorisation'),
+    'type' => 'integer',
+    'schema field' => 'cid',
+  );   
+
+  $info['agency_categorisation']['properties']['uid'] = array(
+    'label' => t('User ID'),
+    'description' => t('The user that created this categorisation'),
+    'type' => 'user',
+    'schema field' => 'uid',
+  );   
+
+  $info['agency_categorisation']['properties']['pid'] = array(
+    'label' => t('Property ID'),
+    'description' => t('The property id this categorisation relates to'),
+    'type' => 'integer',
+    'schema field' => 'pid',
+  );  
+
+  $info['agency_categorisation']['properties']['vid'] = array(
+    'label' => t('Vocabulary ID'),
+    'description' => t('The vocabulary id of this categorisation'),
+    'type' => 'integer',
+    'schema field' => 'vid',
+  );  
+
+  $info['agency_categorisation']['properties']['tid'] = array(
+    'label' => t('Term ID'),
+    'description' => t('The term id of this categorisation'),
+    'type' => 'integer',
+    'schema field' => 'tid',
+  );  
+
+  $info['agency_media']['properties']['mid'] = array(
+    'label' => t('Media ID'),
+    'description' => t('The unique id of the media'),
+    'type' => 'integer',
+    'schema field' => 'mid',
+  );   
+
+  $info['agency_media']['properties']['uid'] = array(
+    'label' => t('User ID'),
+    'description' => t('The user that created this media'),
+    'type' => 'user',
+    'schema field' => 'uid',
+  ); 
+
+  $info['agency_media']['properties']['pid'] = array(
+    'label' => t('Property ID'),
+    'description' => t('The property this media belongs to'),
+    'type' => 'integer',
+    'schema field' => 'pid',
+  ); 
+
+  $info['agency_media']['properties']['fid'] = array(
+    'label' => t('File ID'),
+    'description' => t('The file id from file_managed'),
+    'type' => 'integer',
+    'schema field' => 'fid',
+  ); 
+
+  $info['agency_media']['properties']['type'] = array(
+    'label' => t('Type'),
+    'description' => t('The type of media'),
+    'type' => 'text',
+    'schema field' => 'type',
+  ); 
+
+  $info['agency_media']['properties']['caption'] = array(
+    'label' => t('Caption'),
+    'description' => t('The media caption'),
+    'type' => 'text',
+    'schema field' => 'caption',
+  ); 
+
+  $info['agency_media']['properties']['position'] = array(
+    'label' => t('Position'),
+    'description' => t('The position in the hierarchy for this media item'),
+    'type' => 'integer',
+    'schema field' => 'position',
+  ); 
+
+  $info['agency_media']['properties']['created'] = array(
+    'label' => t('Created'),
+    'description' => t('The date this media item was created'),
+    'type' => 'date',
+    'schema field' => 'created',
+  );
+
+  $info['agency_media']['properties']['updated'] = array(
+    'label' => t('Updated'),
+    'description' => t('The date this media item was updated'),
+    'type' => 'date',
+    'schema field' => 'updated',
+  );
+
+  $info['agency_media']['properties']['status'] = array(
+    'label' => t('Status'),
+    'description' => t('The status of this media item'),
+    'type' => 'integer',
+    'schema field' => 'status',
+  );
+
+  $info['agency_feature']['properties']['fid'] = array(
+    'label' => t('Status'),
+    'description' => t('The unique id of the feature'),
+    'type' => 'integer',
+    'schema field' => 'fid',
+  );
+
+  $info['agency_feature']['properties']['pid'] = array(
+    'label' => t('Property ID'),
+    'description' => t('The property this feature belongs to'),
+    'type' => 'integer',
+    'schema field' => 'pid',
+  );
+
+  $info['agency_feature']['properties']['uid'] = array(
+    'label' => t('User ID'),
+    'description' => t('The user that created this feature'),
+    'type' => 'user',
+    'schema field' => 'uid',
+  );
+
+   $info['agency_feature']['properties']['description'] = array(
+    'label' => t('Description'),
+    'description' => t('The description for the property'),
+    'type' => 'text',
+    'schema field' => 'description',
+  );
+
+  return $info;
+
+}
+
+function agency_views_data_alter(&$data) {
+
+  $data['agency_property']['user'] = array(
+    'title' => t('Relationship to Users'),
+    'help' => t('Add a relationship to the Users table'),
+    'relationship' => array(
+      'base' => 'users',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between property and user'),
+      'title' => t('Relationship between property and user'),
+      'help' => t('Creates a relationship between the property and user that created it by using the UID field on property'),
+    ),
+  );
+
+  $data['agency_categorisation']['user'] = array(
+    'title' => t('Relationship to Users'),
+    'help' => t('Add a relationship to the Users table'),
+    'relationship' => array(
+      'base' => 'users',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between categorisation and user'),
+      'title' => t('Relationship between categorisation and user'),
+      'help' => t('Creates a relationship between the categorisation and user that created it by using the UID field on user'),
+    ),
+  );
+
+  $data['agency_categorisation']['property'] = array(
+    'title' => t('Relationship to Property'),
+    'help' => t('Add a relationship to the Property table'),
+    'relationship' => array(
+      'base' => 'agency_property',
+      'base field' => 'pid',
+      'field' => 'pid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between categorisation and property'),
+      'title' => t('Relationship between categorisation and property'),
+      'help' => t('Creates a relationship between the categorisation and property that it belongs to by using the PID field on categorisation'),
+    ),
+  );
+
+  $data['agency_categorisation']['vocabulary'] = array(
+    'title' => t('Relationship to Vocabulary'),
+    'help' => t('Add a relationship to the Taxonomy Vocabulary table'),
+    'relationship' => array(
+      'base' => 'taxonomy_vocabulary',
+      'base field' => 'vid',
+      'field' => 'vid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between categorisation and vocabulary'),
+      'title' => t('Relationship between categorisation and vocabulary'),
+      'help' => t('Creates a relationship between the categorisation and vocabulary that it belongs to by using the VID field on categorisation'),
+    ),
+  );
+
+  $data['agency_categorisation']['term'] = array(
+    'title' => t('Relationship to Term'),
+    'help' => t('Add a relationship to the Taxonomy Term Data table'),
+    'relationship' => array(
+      'base' => 'taxonomy_term_data',
+      'base field' => 'tid',
+      'field' => 'tid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between categorisation and taxonomy term'),
+      'title' => t('Relationship between categorisation and taxonomy term'),
+      'help' => t('Creates a relationship between the categorisation and taxonomy term that it belongs to by using the TID field on categorisation'),
+    ),
+  );
+
+  $data['agency_media']['user'] = array(
+    'title' => t('Relationship to Users'),
+    'help' => t('Add a relationship to the Users table'),
+    'relationship' => array(
+      'base' => 'users',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between media and user'),
+      'title' => t('Relationship between media and user'),
+      'help' => t('Creates a relationship between the media and user that created it by using the UID field on user'),
+    ),
+  );  
+
+  $data['agency_media']['property'] = array(
+    'title' => t('Relationship to Property'),
+    'help' => t('Add a relationship to the Property table'),
+    'relationship' => array(
+      'base' => 'agency_property',
+      'base field' => 'pid',
+      'field' => 'pid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between media and property'),
+      'title' => t('Relationship between media and property'),
+      'help' => t('Creates a relationship between the media and property that it belongs to by using the PID field on property'),
+    ),
+  ); 
+
+  $data['agency_media']['file'] = array(
+    'title' => t('Relationship to File'),
+    'help' => t('Add a relationship to the File Managed table'),
+    'relationship' => array(
+      'base' => 'file_managed',
+      'base field' => 'fid',
+      'field' => 'fid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between media and file managed'),
+      'title' => t('Relationship between media and file managed'),
+      'help' => t('Creates a relationship between the media and file managed file by using the FID field on file managed'),
+    ),
+  );   
+
+  $data['agency_feature']['property'] = array(
+    'title' => t('Relationship to Property'),
+    'help' => t('Add a relationship to the Property table'),
+    'relationship' => array(
+      'base' => 'agency_property',
+      'base field' => 'pid',
+      'field' => 'pid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between feature and property'),
+      'title' => t('Relationship between feature and property'),
+      'help' => t('Creates a relationship between the feature and property that it belongs to by using the PID field on property'),
+    ),
+  ); 
+
+  $data['agency_feature']['user'] = array(
+    'title' => t('Relationship to Users'),
+    'help' => t('Add a relationship to the Users table'),
+    'relationship' => array(
+      'base' => 'users',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Relationship between feature and user'),
+      'title' => t('Relationship between feature and user'),
+      'help' => t('Creates a relationship between the feature and user that created it by using the UID field on user'),
+    ),
+  );  
+
+
+}

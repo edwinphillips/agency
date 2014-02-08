@@ -26,7 +26,7 @@ function agency_property_image_upload_callback($form, &$form_state){
 
   $commands = array();
   $commands[] = ajax_command_replace('#agency-images-table', '<div id="agency-images-table">'. agency_property_images_table($pid) . '</div>');
-  $commands[] = ajax_command_replace('#agency-images-upload', '<div id="agency-images-upload">'. drupal_render($form['images']['upload']['image']) . '</div>');
+  $commands[] = ajax_command_replace('#agency-images-upload', '<div id="agency-images-upload">'. drupal_render($form['images']['upload']) . '</div>');
 
   $page = array(
     '#type' => 'ajax',
